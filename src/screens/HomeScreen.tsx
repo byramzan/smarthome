@@ -1,4 +1,5 @@
-import { Users, Power, Sparkles } from 'lucide-react';
+import { Users, Power, Sparkles, Map, X } from 'lucide-react';
+import { useState } from 'react';
 import { DeviceCard } from '@/components/devices/DeviceCard';
 import { ClimateControl } from '@/components/devices/ClimateControl';
 import type { SmartDevice, ClimateSettings, FamilyMember } from '@/types';
@@ -30,6 +31,7 @@ export function HomeScreen({
 }: HomeScreenProps) {
   const atHomeMembers = familyMembers.filter(m => m.isHome);
   const allLightsOn = devices.filter(d => d.type === 'light').every(d => d.isOn);
+  const [showMap, setShowMap] = useState(false);
 
   return (
     <div className="space-y-5 pb-28 animate-fade-in">
@@ -70,6 +72,15 @@ export function HomeScreen({
             </span>
           ))}
         </div>
+
+        {/* Navigation Button */}
+        <button
+          onClick={() => setShowMap(true)}
+          className="w-full mt-5 py-3.5 bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/30 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#3B82F6]/20 transition-all z-10 relative"
+        >
+          <Map size={18} />
+          Навигация (План района)
+        </button>
       </div>
 
       {/* Quick Scenarios */}
@@ -77,8 +88,8 @@ export function HomeScreen({
         <button
           onClick={onToggleAllLights}
           className={`flex items-center gap-2 px-5 py-3.5 rounded-2xl whitespace-nowrap transition-all duration-300 ${allLightsOn
-              ? 'bg-[#3B82F6] text-white'
-              : 'bg-[#12121A] text-[#F8FAFC] border border-[#27273A] hover:border-[#3B82F6]/50'
+            ? 'bg-[#3B82F6] text-white'
+            : 'bg-[#12121A] text-[#F8FAFC] border border-[#27273A] hover:border-[#3B82F6]/50'
             }`}
         >
           <Power size={18} />
@@ -116,6 +127,41 @@ export function HomeScreen({
           ))}
         </div>
       </div>
+
+      {/* Map Modal */}
+      {showMap && (
+        <div className="fixed inset-0 bg-[#0A0A0F] z-[100] animate-fade-in flex flex-col">
+          <div className="flex items-center justify-between p-4 bg-[#12121A] border-b border-[#27273A]">
+            <h3 className="font-bold text-lg text-[#F8FAFC]">План района</h3>
+            <button
+              onClick={() => setShowMap(false)}
+              className="w-10 h-10 bg-[#1A1A25] rounded-xl flex items-center justify-center border border-[#27273A] hover:bg-[#27273A] transition-colors"
+            >
+              <X size={20} className="text-[#F8FAFC]" />
+            </button>
+          </div>
+          <div className="flex-1 w-full bg-white relative overflow-hidden">
+            {/* Using an object or iframe allows native PDF zooming/panning on most devices */}
+            <object
+              data="/planirovka.pdf"
+              type="application/pdf"
+              className="w-full h-full"
+            >
+              <div className="flex-1 flex items-center justify-center flex-col gap-4 text-[#0A0A0F] p-4 text-center">
+                <p>Ваш браузер не поддерживает встроенный просмотр PDF.</p>
+                <a
+                  href="/planirovka.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-6 py-3 bg-[#3B82F6] text-white rounded-xl font-bold"
+                >
+                  Скачать или открыть карту
+                </a>
+              </div>
+            </object>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
