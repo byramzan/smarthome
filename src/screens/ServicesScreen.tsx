@@ -69,8 +69,8 @@ export function ServicesScreen({
 
   const FabAndModal = () => (
     <>
-      {cartTotal > 0 && viewMode !== 'cart' && (
-        <div className="fixed bottom-24 left-4 right-4 z-50 animate-fade-in">
+      {cartTotal > 0 && ['products', 'restaurants', 'menu'].includes(viewMode) && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-[480px] px-4 z-50 animate-fade-in">
           <button
             onClick={() => setViewMode('cart')}
             className="w-full flex items-center justify-between p-4 bg-[#3B82F6] text-white rounded-2xl shadow-lg shadow-[#3B82F6]/30"
