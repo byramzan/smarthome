@@ -67,6 +67,46 @@ export function ServicesScreen({
     ? products
     : products.filter(p => p.category === productCategory);
 
+  const FabAndModal = () => (
+    <>
+      {cartTotal > 0 && viewMode !== 'cart' && (
+        <div className="fixed bottom-24 left-4 right-4 z-50 animate-fade-in">
+          <button
+            onClick={() => setViewMode('cart')}
+            className="w-full flex items-center justify-between p-4 bg-[#3B82F6] text-white rounded-2xl shadow-lg shadow-[#3B82F6]/30"
+          >
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <ShoppingCart size={20} />
+                <span className="absolute -top-1.5 -right-2 w-5 h-5 bg-[#EF4444] text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-[#3B82F6]">
+                  {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                </span>
+              </div>
+              <span className="font-bold">Корзина</span>
+            </div>
+            <span className="font-bold">{cartTotal.toLocaleString('ru-RU')} ₽</span>
+          </button>
+        </div>
+      )}
+
+      {showOrderSuccess && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] animate-fade-in">
+          <div className="bg-[#12121A] border border-[#10B981]/30 rounded-3xl p-6 mx-4 max-w-sm w-full text-center">
+            <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Check size={32} className="text-[#10B981]" />
+            </div>
+            <h3 className="text-lg font-bold text-[#F8FAFC] mb-2">
+              {showOrderSuccess === 'order' ? 'Заказ оформлен!' : 'Оплата успешно прошла'}
+            </h3>
+            <p className="text-sm text-[#64748B]">
+              {showOrderSuccess === 'order' ? 'Исполнитель свяжется с вами' : 'Чек отправлен на почту'}
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   const handleAddToCart = (item: { name: string; price: number; type: 'grocery' | 'food'; source: string }) => {
     onAddToCart({ ...item, quantity: 1 });
   };
@@ -111,7 +151,10 @@ export function ServicesScreen({
       <div className="space-y-4 pb-28 animate-fade-in">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setViewMode('services')}
+            onClick={() => {
+              setViewMode('services');
+              setActiveCategory('all');
+            }}
             className="flex items-center gap-1 text-sm text-[#60A5FA]"
           >
             <ChevronRight size={16} className="rotate-180" />
@@ -151,7 +194,7 @@ export function ServicesScreen({
                     <span className="font-medium text-[#F8FAFC]">{item.quantity}</span>
                     <button
                       onClick={() => onAddToCart(item)}
-                      className="w-8 h-8 bg-nova-primary rounded-lg flex items-center justify-center"
+                      className="w-8 h-8 bg-[#3B82F6] rounded-lg flex items-center justify-center"
                     >
                       <Plus size={14} className="text-white" />
                     </button>
@@ -186,6 +229,7 @@ export function ServicesScreen({
             </div>
           </>
         )}
+        <FabAndModal />
       </div>
     );
   }
@@ -196,7 +240,10 @@ export function ServicesScreen({
       <div className="space-y-4 pb-28 animate-fade-in">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setViewMode('services')}
+            onClick={() => {
+              setViewMode('services');
+              setActiveCategory('all');
+            }}
             className="flex items-center gap-1 text-sm text-[#60A5FA]"
           >
             <ChevronRight size={16} className="rotate-180" />
@@ -205,7 +252,7 @@ export function ServicesScreen({
           <h2 className="text-lg font-bold text-[#F8FAFC]">Продукты</h2>
           <button
             onClick={() => setViewMode('cart')}
-            className="relative w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+            className="relative w-11 h-11 bg-[#3B82F6] rounded-xl flex items-center justify-center"
           >
             <ShoppingCart size={18} className="text-white" />
             {cart.length > 0 && (
@@ -222,7 +269,7 @@ export function ServicesScreen({
               key={cat}
               onClick={() => setProductCategory(cat)}
               className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${productCategory === cat
-                ? 'bg-nova-primary text-white'
+                ? 'bg-[#3B82F6] text-white'
                 : 'bg-[#12121A] text-[#94A3B8] border border-[#27273A]'
                 }`}
             >
@@ -268,7 +315,7 @@ export function ServicesScreen({
                       type: 'grocery',
                       source: 'Продукты'
                     })}
-                    className="w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+                    className="w-11 h-11 bg-[#3B82F6] rounded-xl flex items-center justify-center"
                   >
                     <Plus size={20} className="text-white" />
                   </button>
@@ -277,6 +324,7 @@ export function ServicesScreen({
             </div>
           ))}
         </div>
+        <FabAndModal />
       </div>
     );
   }
@@ -287,7 +335,10 @@ export function ServicesScreen({
       <div className="space-y-4 pb-28 animate-fade-in">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setViewMode('services')}
+            onClick={() => {
+              setViewMode('services');
+              setActiveCategory('all');
+            }}
             className="flex items-center gap-1 text-sm text-[#60A5FA]"
           >
             <ChevronRight size={16} className="rotate-180" />
@@ -296,7 +347,7 @@ export function ServicesScreen({
           <h2 className="text-lg font-bold text-[#F8FAFC]">Рестораны</h2>
           <button
             onClick={() => setViewMode('cart')}
-            className="relative w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+            className="relative w-11 h-11 bg-[#3B82F6] rounded-xl flex items-center justify-center"
           >
             <ShoppingCart size={18} className="text-white" />
             {cart.length > 0 && (
@@ -334,6 +385,7 @@ export function ServicesScreen({
             </div>
           ))}
         </div>
+        <FabAndModal />
       </div>
     );
   }
@@ -353,7 +405,7 @@ export function ServicesScreen({
           <h2 className="text-lg font-bold text-[#F8FAFC]">{selectedRestaurant.name}</h2>
           <button
             onClick={() => setViewMode('cart')}
-            className="relative w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+            className="relative w-11 h-11 bg-[#3B82F6] rounded-xl flex items-center justify-center"
           >
             <ShoppingCart size={18} className="text-white" />
             {cart.length > 0 && (
@@ -402,7 +454,7 @@ export function ServicesScreen({
                         type: 'food',
                         source: selectedRestaurant.name
                       })}
-                      className="w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+                      className="w-11 h-11 bg-[#3B82F6] rounded-xl flex items-center justify-center"
                     >
                       <Plus size={20} className="text-white" />
                     </button>
@@ -412,6 +464,7 @@ export function ServicesScreen({
             </div>
           ))}
         </div>
+        <FabAndModal />
       </div>
     );
   }
@@ -422,7 +475,10 @@ export function ServicesScreen({
       <div className="space-y-4 pb-28 animate-fade-in">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setViewMode('services')}
+            onClick={() => {
+              setViewMode('services');
+              setActiveCategory('all');
+            }}
             className="flex items-center gap-1 text-sm text-[#60A5FA]"
           >
             <ChevronRight size={16} className="rotate-180" />
@@ -469,7 +525,7 @@ export function ServicesScreen({
                 </button>
                 <button
                   onClick={handleRentSharing}
-                  className="flex-1 py-3.5 bg-nova-primary text-white rounded-xl font-bold"
+                  className="flex-1 py-3.5 bg-[#3B82F6] text-white rounded-xl font-bold"
                 >
                   Арендовать
                 </button>
@@ -508,6 +564,7 @@ export function ServicesScreen({
             ))}
           </div>
         )}
+        <FabAndModal />
       </div>
     );
   }
@@ -521,7 +578,10 @@ export function ServicesScreen({
       <div className="space-y-4 pb-28 animate-fade-in">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setViewMode('services')}
+            onClick={() => {
+              setViewMode('services');
+              setActiveCategory('all');
+            }}
             className="flex items-center gap-1 text-sm text-[#60A5FA]"
           >
             <ChevronRight size={16} className="rotate-180" />
@@ -547,7 +607,7 @@ export function ServicesScreen({
                     key={day}
                     onClick={() => setCleaningDate(day)}
                     className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${cleaningDate === day
-                      ? 'bg-nova-primary text-white'
+                      ? 'bg-[#3B82F6] text-white'
                       : 'bg-[#1A1A25] text-[#94A3B8] border border-[#27273A]'
                       }`}
                   >
@@ -568,7 +628,7 @@ export function ServicesScreen({
                     key={hour}
                     onClick={() => setCleaningTime(hour)}
                     className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${cleaningTime === hour
-                      ? 'bg-nova-primary text-white'
+                      ? 'bg-[#3B82F6] text-white'
                       : 'bg-[#1A1A25] text-[#94A3B8] border border-[#27273A]'
                       }`}
                   >
@@ -582,11 +642,12 @@ export function ServicesScreen({
           <button
             onClick={handleOrderCleaning}
             disabled={!cleaningDate || !cleaningTime}
-            className="w-full mt-6 py-3.5 bg-nova-primary text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-6 py-3.5 bg-[#3B82F6] text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Заказать
           </button>
         </div>
+        <FabAndModal />
       </div>
     );
   }
@@ -597,7 +658,10 @@ export function ServicesScreen({
       <div className="space-y-4 pb-28 animate-fade-in">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setViewMode('services')}
+            onClick={() => {
+              setViewMode('services');
+              setActiveCategory('all');
+            }}
             className="flex items-center gap-1 text-sm text-[#60A5FA]"
           >
             <ChevronRight size={16} className="rotate-180" />
@@ -634,7 +698,7 @@ export function ServicesScreen({
 
             <button
               onClick={handleChargeStart}
-              className="w-full py-3.5 bg-nova-primary text-white rounded-xl font-bold"
+              className="w-full py-3.5 bg-[#3B82F6] text-white rounded-xl font-bold"
             >
               Оплатить и начать зарядку
             </button>
@@ -683,6 +747,7 @@ export function ServicesScreen({
             ))}
           </div>
         )}
+        <FabAndModal />
       </div>
     );
   }
@@ -704,7 +769,7 @@ export function ServicesScreen({
               else setViewMode('services');
             }}
             className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${activeCategory === category
-              ? 'bg-nova-primary text-white'
+              ? 'bg-[#3B82F6] text-white'
               : 'bg-[#12121A] text-[#94A3B8] border border-[#27273A] hover:border-[#3B82F6]/50'
               }`}
           >
@@ -722,7 +787,7 @@ export function ServicesScreen({
               key={service.id}
               className="nova-card nova-card-hover p-4 flex items-center gap-4"
             >
-              <div className="w-12 h-12 bg-nova-primary/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Icon size={24} className="text-[#60A5FA]" />
               </div>
 
@@ -739,7 +804,7 @@ export function ServicesScreen({
                     setViewMode('cleaning');
                   }
                 }}
-                className="flex items-center gap-1 px-4 py-2.5 bg-nova-primary text-white rounded-xl text-sm font-medium"
+                className="flex items-center gap-1 px-4 py-2.5 bg-[#3B82F6] text-white rounded-xl text-sm font-medium"
               >
                 Заказать
                 <ChevronRight size={16} />
@@ -749,22 +814,7 @@ export function ServicesScreen({
         })}
       </div>
 
-      {/* Success Modal */}
-      {showOrderSuccess && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
-          <div className="bg-[#12121A] border border-[#10B981]/30 rounded-3xl p-6 mx-4 max-w-sm w-full text-center">
-            <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check size={32} className="text-[#10B981]" />
-            </div>
-            <h3 className="text-lg font-bold text-[#F8FAFC] mb-2">
-              {showOrderSuccess === 'order' ? 'Заказ оформлен!' : 'Оплата успешно прошла'}
-            </h3>
-            <p className="text-sm text-[#64748B]">
-              {showOrderSuccess === 'order' ? 'Исполнитель свяжется с вами' : 'Чек отправлен на почту'}
-            </p>
-          </div>
-        </div>
-      )}
+      <FabAndModal />
     </div>
   );
 }

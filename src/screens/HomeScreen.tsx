@@ -35,11 +35,11 @@ export function HomeScreen({
     <div className="space-y-5 pb-28 animate-fade-in">
       {/* Presence Status */}
       <div className="nova-card p-5 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-nova-primary/20 blur-3xl rounded-full" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#3B82F6]/20 blur-3xl rounded-full" />
 
         <div className="flex items-center justify-between mb-4 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+            <div className="w-11 h-11 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
               <Users size={22} className="text-[#10B981]" />
             </div>
             <div>
@@ -77,7 +77,7 @@ export function HomeScreen({
         <button
           onClick={onToggleAllLights}
           className={`flex items-center gap-2 px-5 py-3.5 rounded-2xl whitespace-nowrap transition-all duration-300 ${allLightsOn
-              ? 'bg-nova-primary text-white'
+              ? 'bg-[#3B82F6] text-white'
               : 'bg-[#12121A] text-[#F8FAFC] border border-[#27273A] hover:border-[#3B82F6]/50'
             }`}
         >

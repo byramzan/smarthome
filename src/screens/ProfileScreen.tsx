@@ -13,7 +13,7 @@ export function ProfileScreen({ user }: ProfileScreenProps) {
     <div className="space-y-5 pb-28 animate-fade-in">
       {/* Profile Header */}
       <div className="nova-card p-5 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-nova-primary/20 blur-3xl rounded-full" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#3B82F6]/20 blur-3xl rounded-full" />
         
         <div className="flex items-center gap-4 relative z-10">
           <div className="relative">
@@ -58,7 +58,7 @@ export function ProfileScreen({ user }: ProfileScreenProps) {
       <div className="nova-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+            <div className="w-9 h-9 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
               <Users size={18} className="text-[#60A5FA]" />
             </div>
             <h3 className="font-bold text-base text-[#F8FAFC]">Семья</h3>
@@ -122,7 +122,7 @@ export function ProfileScreen({ user }: ProfileScreenProps) {
       {/* Property */}
       <div className="nova-card p-5">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-9 h-9 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+          <div className="w-9 h-9 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
             <Home size={18} className="text-[#60A5FA]" />
           </div>
           <h3 className="font-bold text-base text-[#F8FAFC]">Недвижимость</h3>
@@ -147,7 +147,7 @@ export function ProfileScreen({ user }: ProfileScreenProps) {
       {/* Transport */}
       <div className="nova-card p-5">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-9 h-9 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+          <div className="w-9 h-9 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
             <Car size={18} className="text-[#60A5FA]" />
           </div>
           <h3 className="font-bold text-base text-[#F8FAFC]">Транспорт</h3>

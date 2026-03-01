@@ -28,7 +28,7 @@ export function BottomNav({ activeScreen, onScreenChange, unreadCount }: BottomN
               key={item.id}
               onClick={() => onScreenChange(item.id)}
               className={`flex flex-col items-center justify-center gap-1 py-2 px-4 rounded-2xl transition-all duration-300 ${isActive
-                  ? 'bg-nova-primary/20'
+                  ? 'bg-[#3B82F6]/20'
                   : 'hover:bg-[#1A1A25]'
                 }`}
             >
@@ -42,7 +42,7 @@ export function BottomNav({ activeScreen, onScreenChange, unreadCount }: BottomN
                     }`}
                 />
                 {item.id === 'utilities' && unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-nova-primary rounded-full border-2 border-[#12121A]" />
+                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#3B82F6] rounded-full border-2 border-[#12121A]" />
                 )}
               </div>
               <span className={`text-[10px] font-medium transition-colors ${isActive ? 'text-[#60A5FA]' : 'text-[#64748B]'

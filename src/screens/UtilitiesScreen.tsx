@@ -99,7 +99,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
 
       {/* Stats Dashboard */}
       <div className="nova-card p-5 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-nova-primary/20 blur-3xl rounded-full" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#3B82F6]/20 blur-3xl rounded-full" />
 
         <div className="flex items-center justify-between mb-4 relative z-10">
           <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
                     <span className="text-sm font-bold text-[#F8FAFC]">{payment.amount.toLocaleString('ru-RU')} ₽</span>
                     <button
                       onClick={() => handlePay(payment)}
-                      className="px-3 py-1.5 bg-nova-primary text-white rounded-lg text-xs font-bold"
+                      className="px-3 py-1.5 bg-[#3B82F6] text-white rounded-lg text-xs font-bold"
                     >
                       Оплатить
                     </button>
@@ -260,7 +260,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
                     {notification.action && (
                       <button
                         onClick={notification.action.handler}
-                        className="mt-2 px-4 py-2 bg-nova-primary text-white rounded-lg text-xs font-bold"
+                        className="mt-2 px-4 py-2 bg-[#3B82F6] text-white rounded-lg text-xs font-bold"
                       >
                         {notification.action.label}
                       </button>
@@ -373,7 +373,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
                 setShowPaymentModal(true);
                 setTimeout(() => setShowPaymentModal(false), 2000);
               }}
-              className="w-full py-3.5 bg-nova-primary text-white rounded-xl font-bold"
+              className="w-full py-3.5 bg-[#3B82F6] text-white rounded-xl font-bold"
             >
               Оплатить
             </button>

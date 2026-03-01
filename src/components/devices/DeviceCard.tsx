@@ -55,7 +55,7 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
       >
         {/* Glow Effect */}
         {device.isOn && (
-          <div className={`absolute -top-10 -right-10 w-20 h-20 bg-nova-primary`} />
+          <div className={`absolute -top-10 -right-10 w-20 h-20 bg-[#3B82F6]`} />
         )}
 
         <div className="flex items-start justify-between mb-3 relative z-10">
@@ -73,7 +73,7 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
               </span>
             )}
             <div className={`w-10 h-6 rounded-full p-0.5 transition-all duration-300 ${device.isOn
-                ? 'bg-nova-primary'
+                ? 'bg-[#3B82F6]'
                 : 'bg-[#27273A]'
               }`}>
               <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${device.isOn ? 'translate-x-4' : 'translate-x-0'
@@ -128,7 +128,7 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
                 <button
                   onClick={() => onUpdateSettings({ autoOffWhenEmpty: !autoOffEnabled })}
                   className={`w-12 h-6 rounded-full p-0.5 transition-all duration-300 ${autoOffEnabled
-                      ? 'bg-nova-primary'
+                      ? 'bg-[#3B82F6]'
                       : 'bg-[#27273A]'
                     }`}
                 >
@@ -160,7 +160,7 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
                         }
                       })}
                       className={`w-12 h-6 rounded-full p-0.5 transition-all duration-300 ${device.settings?.schedule?.enabled
-                          ? 'bg-nova-primary'
+                          ? 'bg-[#3B82F6]'
                           : 'bg-[#27273A]'
                         }`}
                     >
@@ -229,7 +229,7 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
                                 });
                               }}
                               className={`w-9 h-9 rounded-xl text-xs font-medium transition-all ${(device.settings?.schedule?.days || []).includes(day)
-                                  ? 'bg-nova-primary text-white'
+                                  ? 'bg-[#3B82F6] text-white'
                                   : 'bg-[#1A1A25] text-[#64748B] border border-[#27273A]'
                                 }`}
                             >
@@ -246,7 +246,7 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
 
             <button
               onClick={() => setShowSettings(false)}
-              className="w-full py-3.5 bg-nova-primary text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#3B82F6]/25 transition-all"
+              className="w-full py-3.5 bg-[#3B82F6] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#3B82F6]/25 transition-all"
             >
               Сохранить
             </button>

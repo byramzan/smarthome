@@ -72,11 +72,11 @@ export function SecurityScreen({ guestQRs, onGenerateQR, onDeleteQR, incidents }
         <>
           {/* My QR Code */}
           <div className="nova-card p-5 relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-nova-primary/20 blur-3xl rounded-full" />
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#3B82F6]/20 blur-3xl rounded-full" />
 
             <div className="flex items-center justify-between mb-5 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+                <div className="w-11 h-11 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
                   <QrCode size={22} className="text-[#60A5FA]" />
                 </div>
                 <div>
@@ -113,7 +113,7 @@ export function SecurityScreen({ guestQRs, onGenerateQR, onDeleteQR, incidents }
               <h3 className="font-bold text-base text-[#F8FAFC]">Гостевой доступ</h3>
               <button
                 onClick={() => setShowGenerateModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 bg-nova-primary text-white rounded-xl text-sm font-bold"
+                className="flex items-center gap-1.5 px-4 py-2.5 bg-[#3B82F6] text-white rounded-xl text-sm font-bold"
               >
                 <Plus size={16} />
                 Создать
@@ -137,7 +137,7 @@ export function SecurityScreen({ guestQRs, onGenerateQR, onDeleteQR, incidents }
                     className="flex items-center justify-between p-3.5 bg-[#1A1A25] rounded-xl border border-[#27273A] cursor-pointer hover:border-[#3B82F6]/30 transition-all"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+                      <div className="w-10 h-10 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
                         <QrCode size={18} className="text-[#60A5FA]" />
                       </div>
                       <div>
@@ -299,7 +299,7 @@ export function SecurityScreen({ guestQRs, onGenerateQR, onDeleteQR, incidents }
             <button
               onClick={handleGenerate}
               disabled={!purpose.trim()}
-              className="w-full py-3.5 bg-nova-primary text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-[#3B82F6] text-white rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Создать QR-код
             </button>

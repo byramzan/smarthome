@@ -14,7 +14,7 @@ export function ClimateControl({ climate, onTemperatureChange, onBrightnessChang
   return (
     <div className="nova-card p-5 relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute -top-20 -right-20 w-40 h-40 bg-nova-primary/20 blur-3xl rounded-full" />
+      <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#3B82F6]/20 blur-3xl rounded-full" />
       
       <h3 className="font-bold text-base text-[#F8FAFC] mb-5 relative z-10">Климат и освещение</h3>
       
@@ -22,7 +22,7 @@ export function ClimateControl({ climate, onTemperatureChange, onBrightnessChang
       <div className="mb-6 relative z-10">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+            <div className="w-9 h-9 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
               <Thermometer size={16} className="text-[#F59E0B]" />
             </div>
             <span className="text-sm font-medium text-[#94A3B8]">Температура</span>
@@ -66,7 +66,7 @@ export function ClimateControl({ climate, onTemperatureChange, onBrightnessChang
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-nova-primary/20 rounded-xl flex items-center justify-center">
+            <div className="w-9 h-9 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center">
               <Sun size={16} className="text-[#60A5FA]" />
             </div>
             <span className="text-sm font-medium text-[#94A3B8]">Яркость</span>
