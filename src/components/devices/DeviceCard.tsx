@@ -53,10 +53,6 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
         className={`nova-card nova-card-hover p-4 cursor-pointer relative overflow-hidden ${device.isOn ? 'border-[#3B82F6]/30' : ''
           } ${shouldShowWarning ? 'border-[#F59E0B]/50' : ''}`}
       >
-        {/* Glow Effect */}
-        {device.isOn && (
-          <div className={`absolute -top-10 -right-10 w-20 h-20 bg-[#3B82F6]`} />
-        )}
 
         <div className="flex items-start justify-between mb-3 relative z-10">
           <div className={`w-11 h-11 rounded-xl flex items-center justify-center bg-gradient-to-br ${device.isOn ? gradients.on : gradients.off
@@ -73,8 +69,8 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
               </span>
             )}
             <div className={`w-10 h-6 rounded-full p-0.5 transition-all duration-300 ${device.isOn
-                ? 'bg-[#3B82F6]'
-                : 'bg-[#27273A]'
+              ? 'bg-[#3B82F6]'
+              : 'bg-[#27273A]'
               }`}>
               <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${device.isOn ? 'translate-x-4' : 'translate-x-0'
                 }`} />
@@ -128,8 +124,8 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
                 <button
                   onClick={() => onUpdateSettings({ autoOffWhenEmpty: !autoOffEnabled })}
                   className={`w-12 h-6 rounded-full p-0.5 transition-all duration-300 ${autoOffEnabled
-                      ? 'bg-[#3B82F6]'
-                      : 'bg-[#27273A]'
+                    ? 'bg-[#3B82F6]'
+                    : 'bg-[#27273A]'
                     }`}
                 >
                   <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${autoOffEnabled ? 'translate-x-6' : 'translate-x-0'
@@ -160,8 +156,8 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
                         }
                       })}
                       className={`w-12 h-6 rounded-full p-0.5 transition-all duration-300 ${device.settings?.schedule?.enabled
-                          ? 'bg-[#3B82F6]'
-                          : 'bg-[#27273A]'
+                        ? 'bg-[#3B82F6]'
+                        : 'bg-[#27273A]'
                         }`}
                     >
                       <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${device.settings?.schedule?.enabled ? 'translate-x-6' : 'translate-x-0'
@@ -229,8 +225,8 @@ export function DeviceCard({ device, onToggle, onUpdateSettings, adultsAtHome }:
                                 });
                               }}
                               className={`w-9 h-9 rounded-xl text-xs font-medium transition-all ${(device.settings?.schedule?.days || []).includes(day)
-                                  ? 'bg-[#3B82F6] text-white'
-                                  : 'bg-[#1A1A25] text-[#64748B] border border-[#27273A]'
+                                ? 'bg-[#3B82F6] text-white'
+                                : 'bg-[#1A1A25] text-[#64748B] border border-[#27273A]'
                                 }`}
                             >
                               {day}
