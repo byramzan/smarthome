@@ -1,0 +1,283 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark Theme - Modern Glassmorphism */
+    --background: 220 20% 6%;
+    --foreground: 0 0% 98%;
+    --card: 220 18% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 250 95% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 220 15% 16%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 280 85% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 250 95% 60%;
+    --radius: 1rem;
+
+    /* Custom Dark Colors */
+    --nova-bg: #0A0A0F;
+    --nova-surface: #12121A;
+    --nova-surface-elevated: #1A1A25;
+    --nova-primary: #3B82F6;
+    --nova-primary-light: #60A5FA;
+    --nova-secondary: #06B6D4;
+    --nova-accent: #F472B6;
+    --nova-success: #10B981;
+    --nova-warning: #F59E0B;
+    --nova-error: #EF4444;
+    --nova-text: #F8FAFC;
+    --nova-text-secondary: #94A3B8;
+    --nova-text-muted: #64748B;
+    --nova-border: #27273A;
+    --nova-glass: rgba(26, 26, 37, 0.8);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[#0A0A0F] text-[#F8FAFC] antialiased;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer utilities {
+
+  /* Glassmorphism Card */
+  .nova-card {
+    @apply bg-[#12121A]/80 backdrop-blur-xl rounded-2xl border border-[#27273A]/50;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .nova-card-hover {
+    @apply transition-all duration-300;
+  }
+
+  .nova-card-hover:hover {
+    @apply border-[#3B82F6]/30;
+    box-shadow:
+      0 8px 32px rgba(59, 130, 246, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  /* Solid Button */
+  .nova-button {
+    @apply relative overflow-hidden rounded-xl px-6 py-3 font-semibold text-sm text-white transition-all duration-300;
+    background: var(--nova-primary);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+  }
+
+  .nova-button::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: var(--nova-primary-light);
+  }
+
+  .nova-button:hover {
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .nova-button:hover::before {
+    @apply opacity-100;
+  }
+
+  .nova-button span {
+    @apply relative z-10;
+  }
+
+  /* Secondary Button */
+  .nova-button-secondary {
+    @apply bg-[#1A1A25] text-[#F8FAFC] rounded-xl px-6 py-3 font-semibold text-sm transition-all duration-300 border border-[#27273A];
+  }
+
+  .nova-button-secondary:hover {
+    @apply border-[#3B82F6]/50 bg-[#27273A];
+  }
+
+  /* Icon Button */
+  .nova-icon-button {
+    @apply w-11 h-11 bg-[#1A1A25] rounded-xl flex items-center justify-center transition-all duration-300 border border-[#27273A];
+  }
+
+  .nova-icon-button:hover {
+    @apply border-[#3B82F6]/50 bg-[#27273A];
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.2);
+  }
+
+  /* Solid Text Color */
+  .text-gradient {
+    @apply text-[#60A5FA];
+  }
+
+  /* Glow Effects */
+  .glow-primary {
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.4);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+  }
+
+  /* Animations */
+  .animate-pulse-soft {
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-typing {
+    animation: typing 1.5s infinite;
+  }
+
+  @keyframes typing {
+
+    0%,
+    60%,
+    100% {
+      opacity: 0.3;
+    }
+
+    30% {
+      opacity: 1;
+    }
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Status Indicators */
+  .status-online {
+    @apply bg-[#10B981];
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  }
+
+  .status-offline {
+    @apply bg-[#64748B];
+  }
+}
+
+/* Custom Slider Styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 6px;
+  background: #27273A;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--nova-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+  margin-top: -7px;
+  transition: transform 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* QR Pattern */
+.qr-pattern {
+  background-image:
+    repeating-linear-gradient(0deg, #3B82F6 0, #3B82F6 4px, transparent 4px, transparent 8px),
+    repeating-linear-gradient(90deg, #3B82F6 0, #3B82F6 4px, transparent 4px, transparent 8px);
+  background-size: 8px 8px;
+}
+
+/* Bottom Navigation Glow */
+.nav-glow {
+  box-shadow:
+    0 -4px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Chat Bubble Colors (Solid) */
+.chat-ai {
+  background: #1A1A25;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.chat-user {
+  background: var(--nova-primary);
+}
