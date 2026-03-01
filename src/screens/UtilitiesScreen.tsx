@@ -58,15 +58,18 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
 
   const unreadNotifications = notifications.filter(n => !n.isRead);
 
+  const [selectedMonth, setSelectedMonth] = useState<UtilityStats | null>(null);
+
   // Stats
   const totalElectricity = utilityStats.reduce((sum, s) => sum + s.electricity, 0);
   const totalWater = utilityStats.reduce((sum, s) => sum + s.water, 0);
-  const avgMonthly = Math.round((totalElectricity + totalWater) / utilityStats.length);
+  const totalGas = utilityStats.reduce((sum, s) => sum + s.gas, 0);
+  const avgMonthly = Math.round((totalElectricity + totalWater + totalGas) / utilityStats.length);
 
   return (
     <div className="space-y-5 pb-28 animate-fade-in">
       {/* Balance Card */}
-      <div 
+      <div
         className="p-6 rounded-3xl relative overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%)',
@@ -74,18 +77,18 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
         }}
       >
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
-        
+
         <p className="text-sm text-white/80 mb-1 relative z-10">Сумма к оплате</p>
         <h2 className="text-4xl font-bold text-white mb-5 relative z-10">{totalPending.toLocaleString('ru-RU')} ₽</h2>
-        
+
         <div className="flex gap-3 relative z-10">
-          <button 
+          <button
             onClick={() => pendingPayments.length > 0 && handlePay(pendingPayments[0])}
             className="flex-1 py-3.5 bg-white text-[#3B82F6] rounded-xl font-bold hover:shadow-lg transition-all"
           >
             Оплатить всё
           </button>
-          <button 
+          <button
             onClick={handleRentPay}
             className="px-5 py-3.5 bg-white/20 text-white rounded-xl font-bold hover:bg-white/30 transition-all"
           >
@@ -97,7 +100,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
       {/* Stats Dashboard */}
       <div className="nova-card p-5 relative overflow-hidden">
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-nova-primary/20 blur-3xl rounded-full" />
-        
+
         <div className="flex items-center justify-between mb-4 relative z-10">
           <div className="flex items-center gap-2">
             <BarChart3 size={20} className="text-[#60A5FA]" />
@@ -111,19 +114,24 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
           <div className="flex items-end justify-between h-28 gap-2">
             {utilityStats.map((stat, index) => {
               const maxTotal = Math.max(...utilityStats.map(s => s.electricity + s.water + s.gas));
-              
+
               return (
-                <div key={index} className="flex-1 flex flex-col items-center gap-1">
+                <div
+                  key={index}
+                  className={`flex-1 flex flex-col items-center gap-1 cursor-pointer transition-all hover:opacity-80 ${selectedMonth && selectedMonth.month !== stat.month ? 'opacity-40' : 'opacity-100'
+                    }`}
+                  onClick={() => setSelectedMonth(selectedMonth?.month === stat.month ? null : stat)}
+                >
                   <div className="w-full flex items-end gap-0.5" style={{ height: '90px' }}>
-                    <div 
+                    <div
                       className="flex-1 bg-[#F59E0B] rounded-t"
                       style={{ height: `${(stat.electricity / maxTotal) * 100}%` }}
                     />
-                    <div 
+                    <div
                       className="flex-1 bg-[#3B82F6] rounded-t"
                       style={{ height: `${(stat.water / maxTotal) * 100}%` }}
                     />
-                    <div 
+                    <div
                       className="flex-1 bg-[#10B981] rounded-t"
                       style={{ height: `${(stat.gas / maxTotal) * 100}%` }}
                     />
@@ -150,18 +158,28 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
         </div>
 
         {/* Indicators */}
-        <div className="grid grid-cols-3 gap-3 pt-4 border-t border-[#27273A] relative z-10">
+        <div className="grid grid-cols-3 gap-3 pt-4 border-t border-[#27273A] relative z-10 transition-all">
           <div className="text-center">
-            <p className="text-xs text-[#64748B] mb-1">Средний расход</p>
-            <p className="text-lg font-bold text-[#60A5FA]">{avgMonthly.toLocaleString('ru-RU')} ₽</p>
+            <p className="text-xs text-[#64748B] mb-1">
+              {selectedMonth ? 'Расход за период' : 'Средний расход'}
+            </p>
+            <p className="text-lg font-bold text-[#60A5FA]">
+              {selectedMonth
+                ? (selectedMonth.electricity + selectedMonth.water + selectedMonth.gas).toLocaleString('ru-RU')
+                : avgMonthly.toLocaleString('ru-RU')} ₽
+            </p>
           </div>
           <div className="text-center">
             <p className="text-xs text-[#64748B] mb-1">Электричество</p>
-            <p className="text-lg font-bold text-[#F59E0B]">{totalElectricity.toLocaleString('ru-RU')} ₽</p>
+            <p className="text-lg font-bold text-[#F59E0B]">
+              {selectedMonth ? selectedMonth.electricity.toLocaleString('ru-RU') : totalElectricity.toLocaleString('ru-RU')} ₽
+            </p>
           </div>
           <div className="text-center">
             <p className="text-xs text-[#64748B] mb-1">Вода</p>
-            <p className="text-lg font-bold text-[#3B82F6]">{totalWater.toLocaleString('ru-RU')} ₽</p>
+            <p className="text-lg font-bold text-[#3B82F6]">
+              {selectedMonth ? selectedMonth.water.toLocaleString('ru-RU') : totalWater.toLocaleString('ru-RU')} ₽
+            </p>
           </div>
         </div>
       </div>
@@ -174,11 +192,11 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
             {pendingPayments.map((payment) => {
               const Icon = paymentTypeIcons[payment.type] || Receipt;
               const color = paymentTypeColors[payment.type];
-              
+
               return (
                 <div key={payment.id} className="flex items-center justify-between p-3.5 bg-[#1A1A25] rounded-xl border border-[#27273A]">
                   <div className="flex items-center gap-3">
-                    <div 
+                    <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center"
                       style={{ backgroundColor: `${color}15` }}
                     >
@@ -211,34 +229,31 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
           <h3 className="font-bold text-base text-[#F8FAFC] mb-4">Уведомления</h3>
           <div className="space-y-3">
             {unreadNotifications.map((notification) => (
-              <div 
-                key={notification.id} 
-                className={`p-4 rounded-xl border ${
-                  notification.type === 'emergency' 
-                    ? 'bg-[#EF4444]/10 border-[#EF4444]/30' 
+              <div
+                key={notification.id}
+                className={`p-4 rounded-xl border ${notification.type === 'emergency'
+                    ? 'bg-[#EF4444]/10 border-[#EF4444]/30'
                     : notification.type === 'warning'
-                    ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30'
-                    : 'bg-[#3B82F6]/10 border-[#3B82F6]/30'
-                }`}
+                      ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30'
+                      : 'bg-[#3B82F6]/10 border-[#3B82F6]/30'
+                  }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    notification.type === 'emergency' 
-                      ? 'bg-[#EF4444]' 
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${notification.type === 'emergency'
+                      ? 'bg-[#EF4444]'
                       : notification.type === 'warning'
-                      ? 'bg-[#F59E0B]'
-                      : 'bg-[#3B82F6]'
-                  }`}>
+                        ? 'bg-[#F59E0B]'
+                        : 'bg-[#3B82F6]'
+                    }`}>
                     <AlertCircle size={16} className="text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className={`text-sm font-bold ${
-                      notification.type === 'emergency' 
-                        ? 'text-[#EF4444]' 
+                    <h4 className={`text-sm font-bold ${notification.type === 'emergency'
+                        ? 'text-[#EF4444]'
                         : notification.type === 'warning'
-                        ? 'text-[#F59E0B]'
-                        : 'text-[#3B82F6]'
-                    }`}>
+                          ? 'text-[#F59E0B]'
+                          : 'text-[#3B82F6]'
+                      }`}>
                       {notification.title}
                     </h4>
                     <p className="text-xs text-[#94A3B8] mt-1">{notification.message}</p>
@@ -315,7 +330,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
           <div className="bg-[#12121A] border border-[#27273A] rounded-3xl p-6 mx-4 max-w-sm w-full">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-[#F8FAFC]">Оплата аренды</h3>
-              <button 
+              <button
                 onClick={() => setShowRentModal(false)}
                 className="w-9 h-9 bg-[#1A1A25] rounded-xl flex items-center justify-center text-[#64748B]"
               >
@@ -326,7 +341,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
             <div className="mb-4">
               <p className="text-sm text-[#94A3B8] mb-3">Стоимость: 45 000 ₽/месяц</p>
               <div className="flex items-center gap-3 mb-4">
-                <button 
+                <button
                   onClick={() => setRentMonths(Math.max(1, rentMonths - 1))}
                   className="w-12 h-12 bg-[#1A1A25] rounded-xl flex items-center justify-center text-[#F8FAFC] font-bold"
                 >
@@ -336,7 +351,7 @@ export function UtilitiesScreen({ payments, utilityStats, notifications, totalPe
                   <span className="text-3xl font-bold text-[#60A5FA]">{rentMonths}</span>
                   <span className="text-sm text-[#64748B] ml-1">{rentMonths === 1 ? 'месяц' : rentMonths < 5 ? 'месяца' : 'месяцев'}</span>
                 </div>
-                <button 
+                <button
                   onClick={() => setRentMonths(Math.min(12, rentMonths + 1))}
                   className="w-12 h-12 bg-[#1A1A25] rounded-xl flex items-center justify-center text-[#F8FAFC] font-bold"
                 >

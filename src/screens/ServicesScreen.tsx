@@ -12,6 +12,7 @@ interface ServicesScreenProps {
   chargingStations: ChargingStation[];
   onAddToCart: (item: Omit<CartItem, 'id'>) => void;
   onRemoveFromCart: (itemId: string) => void;
+  onUpdateQuantity: (itemId: string, delta: number) => void;
   onClearCart: () => void;
 }
 
@@ -43,6 +44,7 @@ export function ServicesScreen({
   cartTotal,
   onAddToCart,
   onRemoveFromCart,
+  onUpdateQuantity,
   onClearCart,
   chargingStations
 }: ServicesScreenProps) {
@@ -54,7 +56,7 @@ export function ServicesScreen({
   const [productCategory, setProductCategory] = useState('Все');
   const [cleaningDate, setCleaningDate] = useState('');
   const [cleaningTime, setCleaningTime] = useState('');
-  const [showOrderSuccess, setShowOrderSuccess] = useState(false);
+  const [showOrderSuccess, setShowOrderSuccess] = useState<'order' | 'payment' | null>(null);
   const [selectedStation, setSelectedStation] = useState<ChargingStation | null>(null);
 
   const filteredServices = activeCategory === 'all'
@@ -71,9 +73,9 @@ export function ServicesScreen({
 
   const handleOrderCleaning = () => {
     if (cleaningDate && cleaningTime) {
-      setShowOrderSuccess(true);
+      setShowOrderSuccess('order');
       setTimeout(() => {
-        setShowOrderSuccess(false);
+        setShowOrderSuccess(null);
         setViewMode('services');
         setSelectedService(null);
         setCleaningDate('');
@@ -84,9 +86,9 @@ export function ServicesScreen({
 
   const handleRentSharing = () => {
     if (selectedSharing) {
-      setShowOrderSuccess(true);
+      setShowOrderSuccess('payment');
       setTimeout(() => {
-        setShowOrderSuccess(false);
+        setShowOrderSuccess(null);
         setViewMode('sharing');
         setSelectedSharing(null);
       }, 2000);
@@ -95,10 +97,9 @@ export function ServicesScreen({
 
   const handleChargeStart = () => {
     if (selectedStation) {
-      setShowOrderSuccess(true);
+      setShowOrderSuccess('payment');
       setTimeout(() => {
-        setShowOrderSuccess(false);
-        setViewMode('services');
+        setShowOrderSuccess(null);
         setSelectedStation(null);
       }, 2000);
     }
@@ -172,11 +173,10 @@ export function ServicesScreen({
               </div>
               <button
                 onClick={() => {
-                  setShowOrderSuccess(true);
+                  setShowOrderSuccess('payment');
                   setTimeout(() => {
                     onClearCart();
-                    setViewMode('services');
-                    setShowOrderSuccess(false);
+                    setShowOrderSuccess(null);
                   }, 2000);
                 }}
                 className="w-full py-3.5 bg-white text-[#3B82F6] rounded-xl font-bold hover:shadow-lg transition-all"
@@ -222,8 +222,8 @@ export function ServicesScreen({
               key={cat}
               onClick={() => setProductCategory(cat)}
               className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${productCategory === cat
-                  ? 'bg-nova-primary text-white'
-                  : 'bg-[#12121A] text-[#94A3B8] border border-[#27273A]'
+                ? 'bg-nova-primary text-white'
+                : 'bg-[#12121A] text-[#94A3B8] border border-[#27273A]'
                 }`}
             >
               {cat}
@@ -239,17 +239,41 @@ export function ServicesScreen({
                 <p className="text-xs text-[#64748B]">{product.unit}</p>
                 <p className="text-sm text-[#60A5FA] font-semibold">{product.price} ₽</p>
               </div>
-              <button
-                onClick={() => handleAddToCart({
-                  name: product.name,
-                  price: product.price,
-                  type: 'grocery',
-                  source: 'Продукты'
-                })}
-                className="w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
-              >
-                <Plus size={20} className="text-white" />
-              </button>
+              {(() => {
+                const cartItem = cart.find(i => i.name === product.name && i.source === 'Продукты');
+                if (cartItem) {
+                  return (
+                    <div className="flex items-center gap-3 bg-[#1A1A25] rounded-xl p-1 border border-[#27273A]">
+                      <button
+                        onClick={() => onUpdateQuantity(cartItem.id, -1)}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[#27273A]"
+                      >
+                        <Minus size={14} className="text-[#F8FAFC]" />
+                      </button>
+                      <span className="text-sm font-bold text-[#F8FAFC] w-4 text-center">{cartItem.quantity}</span>
+                      <button
+                        onClick={() => onUpdateQuantity(cartItem.id, 1)}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[#27273A]"
+                      >
+                        <Plus size={14} className="text-[#F8FAFC]" />
+                      </button>
+                    </div>
+                  );
+                }
+                return (
+                  <button
+                    onClick={() => handleAddToCart({
+                      name: product.name,
+                      price: product.price,
+                      type: 'grocery',
+                      source: 'Продукты'
+                    })}
+                    className="w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+                  >
+                    <Plus size={20} className="text-white" />
+                  </button>
+                );
+              })()}
             </div>
           ))}
         </div>
@@ -349,17 +373,41 @@ export function ServicesScreen({
                   <p className="text-xs text-[#64748B] mb-2">{item.description}</p>
                   <p className="text-sm text-[#60A5FA] font-bold">{item.price} ₽</p>
                 </div>
-                <button
-                  onClick={() => handleAddToCart({
-                    name: item.name,
-                    price: item.price,
-                    type: 'food',
-                    source: selectedRestaurant.name
-                  })}
-                  className="w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
-                >
-                  <Plus size={20} className="text-white" />
-                </button>
+                {(() => {
+                  const cartItem = cart.find(i => i.name === item.name && i.source === selectedRestaurant.name);
+                  if (cartItem) {
+                    return (
+                      <div className="flex items-center gap-3 bg-[#1A1A25] rounded-xl p-1 border border-[#27273A]">
+                        <button
+                          onClick={() => onUpdateQuantity(cartItem.id, -1)}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[#27273A]"
+                        >
+                          <Minus size={14} className="text-[#F8FAFC]" />
+                        </button>
+                        <span className="text-sm font-bold text-[#F8FAFC] w-4 text-center">{cartItem.quantity}</span>
+                        <button
+                          onClick={() => onUpdateQuantity(cartItem.id, 1)}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[#27273A]"
+                        >
+                          <Plus size={14} className="text-[#F8FAFC]" />
+                        </button>
+                      </div>
+                    );
+                  }
+                  return (
+                    <button
+                      onClick={() => handleAddToCart({
+                        name: item.name,
+                        price: item.price,
+                        type: 'food',
+                        source: selectedRestaurant.name
+                      })}
+                      className="w-11 h-11 bg-nova-primary rounded-xl flex items-center justify-center"
+                    >
+                      <Plus size={20} className="text-white" />
+                    </button>
+                  );
+                })()}
               </div>
             </div>
           ))}
@@ -442,8 +490,8 @@ export function ServicesScreen({
                     <p className="text-xs text-[#64748B]">{item.category}</p>
                   </div>
                   <div className={`px-2.5 py-1 rounded-lg text-xs font-medium ${item.available
-                      ? 'bg-[#10B981]/10 text-[#10B981]'
-                      : 'bg-[#EF4444]/10 text-[#EF4444]'
+                    ? 'bg-[#10B981]/10 text-[#10B981]'
+                    : 'bg-[#EF4444]/10 text-[#EF4444]'
                     }`}>
                     {item.available ? 'Доступно' : 'Занято'}
                   </div>
@@ -499,8 +547,8 @@ export function ServicesScreen({
                     key={day}
                     onClick={() => setCleaningDate(day)}
                     className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${cleaningDate === day
-                        ? 'bg-nova-primary text-white'
-                        : 'bg-[#1A1A25] text-[#94A3B8] border border-[#27273A]'
+                      ? 'bg-nova-primary text-white'
+                      : 'bg-[#1A1A25] text-[#94A3B8] border border-[#27273A]'
                       }`}
                   >
                     {day}
@@ -520,8 +568,8 @@ export function ServicesScreen({
                     key={hour}
                     onClick={() => setCleaningTime(hour)}
                     className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${cleaningTime === hour
-                        ? 'bg-nova-primary text-white'
-                        : 'bg-[#1A1A25] text-[#94A3B8] border border-[#27273A]'
+                      ? 'bg-nova-primary text-white'
+                      : 'bg-[#1A1A25] text-[#94A3B8] border border-[#27273A]'
                       }`}
                   >
                     {hour}
@@ -618,8 +666,8 @@ export function ServicesScreen({
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${station.status === 'available' ? 'bg-[#10B981]/20 text-[#10B981]' :
-                      station.status === 'in_use' ? 'bg-[#3B82F6]/20 text-[#60A5FA]' :
-                        'bg-[#EF4444]/20 text-[#EF4444]'
+                    station.status === 'in_use' ? 'bg-[#3B82F6]/20 text-[#60A5FA]' :
+                      'bg-[#EF4444]/20 text-[#EF4444]'
                     }`}>
                     {station.status === 'available' ? 'Свободна' :
                       station.status === 'in_use' ? 'Занята' : 'Офлайн'}
@@ -656,8 +704,8 @@ export function ServicesScreen({
               else setViewMode('services');
             }}
             className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${activeCategory === category
-                ? 'bg-nova-primary text-white'
-                : 'bg-[#12121A] text-[#94A3B8] border border-[#27273A] hover:border-[#3B82F6]/50'
+              ? 'bg-nova-primary text-white'
+              : 'bg-[#12121A] text-[#94A3B8] border border-[#27273A] hover:border-[#3B82F6]/50'
               }`}
           >
             {categoryLabels[category]}
@@ -708,8 +756,12 @@ export function ServicesScreen({
             <div className="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Check size={32} className="text-[#10B981]" />
             </div>
-            <h3 className="text-lg font-bold text-[#F8FAFC] mb-2">Заказ оформлен!</h3>
-            <p className="text-sm text-[#64748B]">Исполнитель свяжется с вами</p>
+            <h3 className="text-lg font-bold text-[#F8FAFC] mb-2">
+              {showOrderSuccess === 'order' ? 'Заказ оформлен!' : 'Оплата успешно прошла'}
+            </h3>
+            <p className="text-sm text-[#64748B]">
+              {showOrderSuccess === 'order' ? 'Исполнитель свяжется с вами' : 'Чек отправлен на почту'}
+            </p>
           </div>
         </div>
       )}

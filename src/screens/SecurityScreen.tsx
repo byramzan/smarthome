@@ -5,23 +5,26 @@ import type { GuestQR, SecurityIncident } from '@/types';
 
 interface SecurityScreenProps {
   guestQRs: GuestQR[];
-  onGenerateQR: (purpose: string) => GuestQR;
+  onGenerateQR: (purpose: string, hours: number) => GuestQR;
+  onDeleteQR: (id: string) => void;
   incidents: SecurityIncident[];
 }
 
-export function SecurityScreen({ guestQRs, onGenerateQR, incidents }: SecurityScreenProps) {
+export function SecurityScreen({ guestQRs, onGenerateQR, onDeleteQR, incidents }: SecurityScreenProps) {
   const [activeTab, setActiveTab] = useState<'access' | 'cameras'>('access');
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showQRModal, setShowQRModal] = useState<GuestQR | null>(null);
   const [purpose, setPurpose] = useState('');
+  const [hours, setHours] = useState(6);
   const [copied, setCopied] = useState(false);
 
   const handleGenerate = () => {
     if (!purpose.trim()) return;
-    const newQR = onGenerateQR(purpose);
+    const newQR = onGenerateQR(purpose, hours);
     setShowGenerateModal(false);
     setShowQRModal(newQR);
     setPurpose('');
+    setHours(6);
   };
 
   const copyCode = (code: string) => {
@@ -145,8 +148,19 @@ export function SecurityScreen({ guestQRs, onGenerateQR, incidents }: SecuritySc
                         </div>
                       </div>
                     </div>
-                    <div className="w-10 h-10 bg-[#12121A] rounded-xl flex items-center justify-center border border-[#27273A]">
-                      <span className="text-xs font-mono text-[#94A3B8]">{qr.code.slice(-4)}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 bg-[#12121A] rounded-xl flex items-center justify-center border border-[#27273A]">
+                        <span className="text-xs font-mono text-[#94A3B8]">{qr.code.slice(-4)}</span>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteQR(qr.id);
+                        }}
+                        className="w-10 h-10 bg-[#EF4444]/10 rounded-xl flex items-center justify-center border border-[#EF4444]/30 hover:bg-[#EF4444]/20 transition-colors"
+                      >
+                        <X size={16} className="text-[#EF4444]" />
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -256,8 +270,23 @@ export function SecurityScreen({ guestQRs, onGenerateQR, incidents }: SecuritySc
             </div>
 
             <p className="text-sm text-[#94A3B8] mb-4">
-              QR-код будет действителен 6 часов. Укажите, для кого он предназначен.
+              Укажите время работы и для кого он предназначен.
             </p>
+
+            <div className="flex gap-2 mb-4">
+              {[1, 6, 24].map(h => (
+                <button
+                  key={h}
+                  onClick={() => setHours(h)}
+                  className={`flex-1 py-2 rounded-xl text-sm font-bold border transition-colors ${hours === h
+                      ? 'bg-[#3B82F6]/20 border-[#3B82F6] text-[#3B82F6]'
+                      : 'bg-[#1A1A25] border-[#27273A] text-[#64748B] hover:border-[#3B82F6]/50'
+                    }`}
+                >
+                  {h} {h === 1 ? 'час' : h === 24 ? 'часа' : 'часов'}
+                </button>
+              ))}
+            </div>
 
             <input
               type="text"

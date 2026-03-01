@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, MessageCircle, MapPin, Users, Heart, Share2, Info, BellRing } from 'lucide-react';
+import { Calendar, MessageCircle, MapPin, Users, Heart, Share2, Info, BellRing, Check } from 'lucide-react';
 import type { CommunityEvent, NewsItem } from '@/types';
 
 interface CommunityScreenProps {
@@ -9,6 +9,7 @@ interface CommunityScreenProps {
 
 export function CommunityScreen({ events, news }: CommunityScreenProps) {
     const [activeTab, setActiveTab] = useState<'events' | 'news'>('events');
+    const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
 
     return (
         <div className="space-y-5 pb-28 animate-fade-in">
@@ -17,8 +18,8 @@ export function CommunityScreen({ events, news }: CommunityScreenProps) {
                 <button
                     onClick={() => setActiveTab('events')}
                     className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all ${activeTab === 'events'
-                            ? 'bg-[#1A1A25] text-[#3B82F6] shadow-sm'
-                            : 'text-[#64748B] hover:text-[#94A3B8]'
+                        ? 'bg-[#1A1A25] text-[#3B82F6] shadow-sm'
+                        : 'text-[#64748B] hover:text-[#94A3B8]'
                         }`}
                 >
                     События
@@ -26,8 +27,8 @@ export function CommunityScreen({ events, news }: CommunityScreenProps) {
                 <button
                     onClick={() => setActiveTab('news')}
                     className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all ${activeTab === 'news'
-                            ? 'bg-[#1A1A25] text-[#3B82F6] shadow-sm'
-                            : 'text-[#64748B] hover:text-[#94A3B8]'
+                        ? 'bg-[#1A1A25] text-[#3B82F6] shadow-sm'
+                        : 'text-[#64748B] hover:text-[#94A3B8]'
                         }`}
                 >
                     Коммуникации
@@ -45,8 +46,8 @@ export function CommunityScreen({ events, news }: CommunityScreenProps) {
                             <div className="flex justify-between items-start mb-3 relative z-10">
                                 <div className="flex items-center gap-2">
                                     <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${event.type === 'holiday' ? 'bg-[#F59E0B]/20 text-[#F59E0B]' :
-                                            event.type === 'activity' ? 'bg-[#10B981]/20 text-[#10B981]' :
-                                                'bg-[#3B82F6]/20 text-[#60A5FA]'
+                                        event.type === 'activity' ? 'bg-[#10B981]/20 text-[#10B981]' :
+                                            'bg-[#3B82F6]/20 text-[#60A5FA]'
                                         }`}>
                                         {event.type === 'holiday' ? 'Праздник' :
                                             event.type === 'activity' ? 'Активность' : 'Встреча'}
@@ -80,8 +81,19 @@ export function CommunityScreen({ events, news }: CommunityScreenProps) {
                                 </div>
                             </div>
 
-                            <button className="w-full py-3 bg-[#3B82F6] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-[#3B82F6]/25 transition-all relative z-10">
-                                Я пойду
+                            <button
+                                onClick={() => setJoinedEvents(prev =>
+                                    prev.includes(event.id)
+                                        ? prev.filter(id => id !== event.id)
+                                        : [...prev, event.id]
+                                )}
+                                className={`w-full py-3 rounded-xl font-bold transition-all relative z-10 flex items-center justify-center gap-2 ${joinedEvents.includes(event.id)
+                                        ? 'bg-[#10B981]/20 text-[#10B981] hover:bg-[#10B981]/30'
+                                        : 'bg-[#3B82F6] text-white hover:shadow-lg hover:shadow-[#3B82F6]/25'
+                                    }`}
+                            >
+                                {joinedEvents.includes(event.id) && <Check size={18} />}
+                                {joinedEvents.includes(event.id) ? 'Вы участвуете (Готово)' : 'Я пойду'}
                             </button>
                         </div>
                     ))}

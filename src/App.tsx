@@ -62,8 +62,10 @@ function App() {
     addNotification,
     addToCart,
     removeFromCart,
+    updateCartQuantity,
     clearCart,
     generateGuestQR,
+    deleteGuestQR,
     setIsEmergency
   } = useAppState();
 
@@ -301,6 +303,7 @@ function App() {
             chargingStations={chargingStations}
             onAddToCart={addToCart}
             onRemoveFromCart={removeFromCart}
+            onUpdateQuantity={updateCartQuantity}
             onClearCart={clearCart}
           />
         );
@@ -321,6 +324,7 @@ function App() {
           <SecurityScreen
             guestQRs={guestQRs}
             onGenerateQR={generateGuestQR}
+            onDeleteQR={deleteGuestQR}
             incidents={securityIncidents}
           />
         );

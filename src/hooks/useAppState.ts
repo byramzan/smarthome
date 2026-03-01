@@ -557,6 +557,16 @@ export function useAppState() {
     setCart(prev => prev.filter(i => i.id !== itemId));
   }, []);
 
+  const updateCartQuantity = useCallback((itemId: string, delta: number) => {
+    setCart(prev => prev.map(i => {
+      if (i.id === itemId) {
+        const newQuantity = i.quantity + delta;
+        return { ...i, quantity: newQuantity > 0 ? newQuantity : 1 };
+      }
+      return i;
+    }));
+  }, []);
+
   const clearCart = useCallback(() => {
     setCart([]);
   }, []);
@@ -564,9 +574,9 @@ export function useAppState() {
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   // Гостевые QR-коды
-  const generateGuestQR = useCallback((purpose: string) => {
+  const generateGuestQR = useCallback((purpose: string, hours: number) => {
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 6);
+    expiresAt.setHours(expiresAt.getHours() + hours);
 
     const newQR: GuestQR = {
       id: Date.now().toString(),
@@ -576,6 +586,10 @@ export function useAppState() {
     };
     setGuestQRs(prev => [newQR, ...prev]);
     return newQR;
+  }, []);
+
+  const deleteGuestQR = useCallback((id: string) => {
+    setGuestQRs(prev => prev.filter(qr => qr.id !== id));
   }, []);
 
   // Счётчики
@@ -623,8 +637,10 @@ export function useAppState() {
     addNotification,
     addToCart,
     removeFromCart,
+    updateCartQuantity,
     clearCart,
     generateGuestQR,
+    deleteGuestQR,
     setIsEmergency
   };
 }
