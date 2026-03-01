@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, MessageCircle, MapPin, Users, Heart, Share2, Info, BellRing, Check } from 'lucide-react';
+import { Calendar, MessageCircle, MapPin, Users, Heart, Share2, Info, BellRing, Check, ChevronRight, Send } from 'lucide-react';
 import type { CommunityEvent, NewsItem } from '@/types';
 
 interface CommunityScreenProps {
@@ -8,8 +8,87 @@ interface CommunityScreenProps {
 }
 
 export function CommunityScreen({ events, news }: CommunityScreenProps) {
-    const [activeTab, setActiveTab] = useState<'events' | 'news'>('events');
+    const [activeTab, setActiveTab] = useState<'events' | 'news' | 'chat'>('events');
     const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [messages, setMessages] = useState([
+        { id: '1', author: 'Ахмед', apt: 'кв. 142', text: 'Завтра кто едет в центр утром?', time: '10:15', isMe: false },
+        { id: '2', author: 'Елена', apt: 'кв. 89', text: 'У нас опять воду отключили?', time: '11:30', isMe: false },
+        { id: '3', author: 'Руслан', apt: 'кв. 12', text: 'Да, вроде авария на линии, обещают к вечеру дать.', time: '11:32', isMe: false },
+    ]);
+
+    const handleSendMessage = () => {
+        if (!newMessage.trim()) return;
+        setMessages([
+            ...messages,
+            {
+                id: Date.now().toString(),
+                author: 'Вы',
+                apt: 'кв. 55',
+                text: newMessage,
+                time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+                isMe: true
+            }
+        ]);
+        setNewMessage('');
+    };
+
+    if (activeTab === 'chat') {
+        return (
+            <div className="flex flex-col h-[calc(100vh-140px)] animate-fade-in relative z-20 bg-[#0A0A0F] -m-4 p-4">
+                <div className="flex items-center gap-3 mb-6">
+                    <button
+                        onClick={() => setActiveTab('news')}
+                        className="w-10 h-10 bg-[#12121A] border border-[#27273A] rounded-xl flex items-center justify-center text-[#F8FAFC]"
+                    >
+                        <ChevronRight className="rotate-180" size={20} />
+                    </button>
+                    <div>
+                        <h2 className="text-lg font-bold text-[#F8FAFC]">Чат дома</h2>
+                        <p className="text-xs text-[#64748B]">Башня 3 • 142 участника</p>
+                    </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto space-y-4 pb-20 scrollbar-hide">
+                    {messages.map((msg) => (
+                        <div key={msg.id} className={`flex flex-col ${msg.isMe ? 'items-end' : 'items-start'}`}>
+                            <div className="flex items-baseline gap-2 mb-1 px-1">
+                                <span className="text-xs font-bold text-[#94A3B8]">{msg.author}</span>
+                                <span className="text-[10px] text-[#64748B]">{msg.apt}</span>
+                            </div>
+                            <div className={`p-3 rounded-2xl max-w-[85%] ${msg.isMe
+                                ? 'bg-[#3B82F6] text-white rounded-br-none'
+                                : 'bg-[#1A1A25] text-[#F8FAFC] border border-[#27273A] rounded-bl-none'
+                                }`}>
+                                <p className="text-sm leading-relaxed">{msg.text}</p>
+                                <span className={`text-[10px] block mt-1 text-right ${msg.isMe ? 'text-[#BFDBFE]' : 'text-[#64748B]'}`}>
+                                    {msg.time}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
+                    <input
+                        type="text"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                        placeholder="Сообщение..."
+                        className="flex-1 bg-[#1A1A25] border border-[#27273A] rounded-2xl px-4 py-3.5 text-sm text-[#F8FAFC] placeholder:text-[#64748B] focus:border-[#3B82F6] focus:outline-none"
+                    />
+                    <button
+                        onClick={handleSendMessage}
+                        disabled={!newMessage.trim()}
+                        className="w-12 h-12 bg-[#3B82F6] text-white rounded-2xl flex items-center justify-center disabled:opacity-50 shrink-0 shadow-lg shadow-[#3B82F6]/20"
+                    >
+                        <Send size={18} className="translate-x-0.5" />
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-5 pb-28 animate-fade-in">
@@ -82,14 +161,14 @@ export function CommunityScreen({ events, news }: CommunityScreenProps) {
                             </div>
 
                             <button
-                                onClick={() => setJoinedEvents(prev =>
+                                onClick={() => setJoinedEvents((prev: string[]) =>
                                     prev.includes(event.id)
-                                        ? prev.filter(id => id !== event.id)
+                                        ? prev.filter((id: string) => id !== event.id)
                                         : [...prev, event.id]
                                 )}
                                 className={`w-full py-3 rounded-xl font-bold transition-all relative z-10 flex items-center justify-center gap-2 ${joinedEvents.includes(event.id)
-                                        ? 'bg-[#10B981]/20 text-[#10B981] hover:bg-[#10B981]/30'
-                                        : 'bg-[#3B82F6] text-white hover:shadow-lg hover:shadow-[#3B82F6]/25'
+                                    ? 'bg-[#10B981]/20 text-[#10B981] hover:bg-[#10B981]/30'
+                                    : 'bg-[#3B82F6] text-white hover:shadow-lg hover:shadow-[#3B82F6]/25'
                                     }`}
                             >
                                 {joinedEvents.includes(event.id) && <Check size={18} />}
@@ -107,7 +186,10 @@ export function CommunityScreen({ events, news }: CommunityScreenProps) {
 
                     <div className="grid gap-3">
                         {/* Local Chat Card */}
-                        <div className="nova-card p-4 hover:border-[#3B82F6]/50 cursor-pointer flex items-center gap-4 transition-all">
+                        <div
+                            onClick={() => setActiveTab('chat')}
+                            className="nova-card p-4 hover:border-[#3B82F6]/50 cursor-pointer flex items-center gap-4 transition-all"
+                        >
                             <div className="w-12 h-12 bg-[#3B82F6]/20 rounded-xl flex items-center justify-center shrink-0">
                                 <MessageCircle size={24} className="text-[#3B82F6]" />
                             </div>
